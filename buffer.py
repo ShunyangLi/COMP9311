@@ -19,7 +19,7 @@ def LRU(pages, buffer_size):
                 replacement += 1
                 buffer.pop()
                 buffer.insert(0, page)
-        print("Buffer: ", buffer)
+        print("Query: {: <4} Buffer: [{: <4}]".format(page, ", ".join([str(i) for i in buffer])))
 
     return replacement
 
@@ -28,28 +28,51 @@ def MRU(pages, buffer_size):
     """
     pop the max accessd
     """
-    buffer = {}
+    buffer = []
     replacement = 0
 
     for page in pages:
         if len(buffer) < buffer_size:
-            buffer[page] = 1
+            buffer.insert(0, page)
         else:
             if page in buffer:
-                # put it at the end
-                val = buffer[page] + 1
-                del buffer[page]
-                buffer[page] = val
+                del buffer[buffer.index(page)]
+                buffer.append(page)
             else:
-                # delete the mostly access
                 replacement += 1
-                key = list(buffer.keys())[-1:].pop()
-                del buffer[key]
-                buffer[page] = 1
+                buffer.pop()
+                buffer.insert(0, page)
 
-        print("Buffer: ", buffer)
+        print("Query: {: <4} Buffer: [{: <4}]".format(page, ", ".join([str(i) for i in buffer])))
 
     return replacement
+
+# def MRU(pages, buffer_size):
+#     """
+#     pop the max accessd
+#     """
+#     buffer = {}
+#     replacement = 0
+#
+#     for page in pages:
+#         if len(buffer) < buffer_size:
+#             buffer[page] = 1
+#         else:
+#             if page in buffer:
+#                 # put it at the end
+#                 val = buffer[page] + 1
+#                 del buffer[page]
+#                 buffer[page] = val
+#             else:
+#                 # delete the mostly access
+#                 replacement += 1
+#                 key = list(buffer.keys())[-1:].pop()
+#                 del buffer[key]
+#                 buffer[page] = 1
+#
+#         print("Query: {} Buffer: {}".format(page, buffer))
+#
+#     return replacement
 
 
 def FIFO(pages, buffer_size):
@@ -64,7 +87,7 @@ def FIFO(pages, buffer_size):
                 replacement += 1
                 buffer.pop()
                 buffer.insert(0, page)
-        print("Buffer: ", buffer)
+        print("Query: {: <4} Buffer: [{: <4}]".format(page, ", ".join([str(i) for i in buffer])))
 
     return replacement
 
@@ -75,7 +98,6 @@ if __name__ == '__main__':
 
     for i in range(0, 10):
         pages.append(randint(1, 10))
-
 
     while True:
         lru = LRU(pages, buffer_size)
@@ -93,4 +115,4 @@ if __name__ == '__main__':
 
         pages.clear()
         for i in range(0, 10):
-            pages.append(randint(1, 10))
+            pages.append(randint(1, 9))
